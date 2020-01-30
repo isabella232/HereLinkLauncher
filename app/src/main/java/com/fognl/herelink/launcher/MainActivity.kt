@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val layoutManager = GridLayoutManager(applicationContext, 7)
+        val layoutManager = GridLayoutManager(applicationContext, 4)
         rv_installed_apps.layoutManager = layoutManager
 
         btn_app_drawer.setOnClickListener { onAppDrawerClick() }

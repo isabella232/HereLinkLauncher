@@ -1,11 +1,33 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="ImageButton">
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="ImageButton.AddApp">
+        <item name="android:src">@drawable/ic_add_app</item>
+    </style>
+
+    <style name="ImageButton.Apps">
+        <item name="android:src">@drawable/ic_apps</item>
+    </style>
+
+    <style name="Text"></style>
+
+    <style name="Text.IconTitle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textsize_med</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
 </resources>

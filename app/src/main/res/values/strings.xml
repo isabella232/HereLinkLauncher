@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">HereLink Launcher</string>
+
+    <string name="txt_no_apps_launcher">No apps in the launcher. Click the <b>Apps</b> button below to add some.</string>
+    <string name="app_drawer_instructions">Click an item to launch it. Long-press an item to see options for it.</string>
+    <string name="toast_added_app_success">Added %s to favorites</string>
+    <string name="toast_added_app_fail">Failed to add %s to favorites</string>
+    <string name="toast_remove_app_fail">Failed to remove %s from favorites</string>
+
+    <string name="context_launch">Launch item</string>
+    <string name="context_add_to_launcher">Add to Favorites</string>
+    <string name="context_uninstall">Uninstall app</string>
+    <string name="context_remove_from_launcher">Remove</string>
+
+    <string name="dlg_delete_app_title">Uninstall app</string>
+    <string name="dlg_delete_app_s">Are you sure? %s will be uninstalled.</string>
 </resources>

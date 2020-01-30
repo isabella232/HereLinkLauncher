@@ -5,9 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    >
-    <FrameLayout
+    tools:context=".AppDrawerActivity">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -16,41 +15,40 @@
             android:id="@+id/rv_installed_apps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
             />
-
-        <TextView
-            android:id="@+id/txt_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/padding_large"
-            android:text="@string/txt_no_apps_launcher"
-            android:textSize="@dimen/textsize_large"
-            android:gravity="center"
-            android:visibility="gone"
-            />
-
-    </FrameLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/padding_medium"
+        android:padding="@dimen/padding_large"
+        android:background="#d000"
         app:layout_constraintBottom_toBottomOf="parent"
         >
-        <androidx.legacy.widget.Space
-            android:layout_width="0dip"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
-
-        <ImageButton
-            android:id="@+id/btn_app_drawer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/ImageButton.Apps"
+            android:text="@string/app_drawer_instructions"
+            android:textColor="@color/white"
+            android:gravity="center"
             />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_shade_dark"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        >
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

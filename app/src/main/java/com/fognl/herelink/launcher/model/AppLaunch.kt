@@ -2,6 +2,8 @@ package com.fognl.herelink.launcher.model
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 import android.util.Log
 import com.fognl.herelink.launcher.LauncherApp
@@ -67,21 +69,16 @@ class AppLaunchStorage private constructor(val context: Context) {
     }
 
     val launcherItems: List<AppLaunch>
-        // TODO: Make this async like the other method
         get() {
             val output = mutableListOf<AppLaunch>()
 
-            val manager = LauncherApp.get().packageManager
-            packageNames.forEach { name ->
-                val launch = Intent(Intent.ACTION_MAIN).setPackage(name.toString()).addCategory(Intent.CATEGORY_LAUNCHER)
-                val resolveInfo = manager.resolveActivity(launch, 0)
+            with(LauncherApp.get().packageManager) {
+                packageNames.forEach { name ->
+                    val launch = Intent(Intent.ACTION_MAIN).setPackage(name.toString()).addCategory(Intent.CATEGORY_LAUNCHER)
 
-                resolveInfo?.let { info ->
-                    val app = AppLaunch()
-                    app.title = info.loadLabel(manager)
-                    app.packageName = info.activityInfo.packageName
-                    app.icon = info.activityInfo.loadIcon(manager)
-                    output.add(app)
+                    resolveActivity(launch, 0)?.let { info ->
+                        output.add(toAppLaunch(info, this))
+                    }
                 }
             }
 
@@ -96,15 +93,10 @@ class AppLaunchStorage private constructor(val context: Context) {
             val launch = Intent(Intent.ACTION_MAIN, null)
                 .addCategory(Intent.CATEGORY_LAUNCHER)
 
-            val manager = LauncherApp.get().packageManager
-            val availableActivities = manager.queryIntentActivities(launch, 0)
-
-            availableActivities?.forEach { ri ->
-                val app = AppLaunch()
-                app.title = ri.loadLabel(manager)
-                app.packageName = ri.activityInfo.packageName
-                app.icon = ri.activityInfo.loadIcon(manager)
-                output.add(app)
+            with(LauncherApp.get().packageManager) {
+                queryIntentActivities(launch, 0)?.forEach { ri ->
+                    output.add(toAppLaunch(ri, this))
+                }
             }
 
             return output
@@ -162,4 +154,11 @@ class AppLaunchStorage private constructor(val context: Context) {
         return false
     }
 
+    private fun toAppLaunch(info: ResolveInfo, manager: PackageManager): AppLaunch {
+        val app = AppLaunch()
+        app.title = info.loadLabel(manager)
+        app.packageName = info.activityInfo.packageName
+        app.icon = info.activityInfo.loadIcon(manager)
+        return app
+    }
 }

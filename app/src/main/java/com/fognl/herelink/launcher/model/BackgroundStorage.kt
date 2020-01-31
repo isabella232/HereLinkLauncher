@@ -33,6 +33,7 @@ class BackgroundStorage {
             }
         }
 
+        /** Dump images from assets into an external directory if they don't exist at the destination. */
         fun dumpImages(context: Context) {
             val dir = getImagesDir(context)
 
@@ -58,6 +59,7 @@ class BackgroundStorage {
             }
         }
 
+        /** Return a list of images in the backgrounds directory */
         fun getImages(context: Context): List<File> {
             val output = mutableListOf<File>()
 

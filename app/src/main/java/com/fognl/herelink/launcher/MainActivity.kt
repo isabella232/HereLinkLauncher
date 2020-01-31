@@ -6,13 +6,19 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toFile
 import androidx.recyclerview.widget.GridLayoutManager
 import com.fognl.herelink.launcher.adapter.AppLaunchAdapter
 import com.fognl.herelink.launcher.model.AppLaunch
 import com.fognl.herelink.launcher.model.AppLaunchStorage
+import com.fognl.herelink.launcher.model.BackgroundStorage
+import com.fognl.herelink.launcher.util.AppPrefs
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val REQ_WALLPAPERS = 2002
+    }
 
     private val launchAdapterListener = object: AppLaunchAdapter.ItemListener {
         override fun onItemClicked(position: Int, item: AppLaunch) {
@@ -32,11 +38,33 @@ class MainActivity : AppCompatActivity() {
         rv_installed_apps.layoutManager = layoutManager
 
         btn_app_drawer.setOnClickListener { onAppDrawerClick() }
+        btn_wallpaper.setOnClickListener { onWallpaperClick() }
+
+        BackgroundStorage.setBackground(findViewById(android.R.id.content))
     }
 
     override fun onResume() {
         super.onResume()
         loadApps()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode) {
+            REQ_WALLPAPERS -> {
+                when(resultCode) {
+                    RESULT_OK -> {
+                        data?.data?.also { fileUri ->
+                            AppPrefs.instance.backgroundImage = fileUri.toFile()
+                            BackgroundStorage.setBackground(findViewById(android.R.id.content))
+                        }
+                    }
+                }
+            }
+
+            else -> {
+                super.onActivityResult(requestCode, resultCode, data)
+            }
+        }
     }
 
     private fun loadApps() {
@@ -54,6 +82,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun onAppDrawerClick() {
         startActivity(Intent(this, AppDrawerActivity::class.java))
+    }
+
+    private fun onWallpaperClick() {
+        startActivityForResult(Intent(this, WallpaperActivity::class.java), REQ_WALLPAPERS)
     }
 
     private fun showOptionsFor(item: AppLaunch) {

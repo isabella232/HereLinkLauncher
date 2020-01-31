@@ -20,6 +20,10 @@
         <item name="android:src">@drawable/ic_apps</item>
     </style>
 
+    <style name="ImageButton.Wallpaper">
+        <item name="android:src">@drawable/ic_wallpaper</item>
+    </style>
+
     <style name="Text"></style>
 
     <style name="Text.IconTitle">

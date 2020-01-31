@@ -47,10 +47,19 @@
             />
 
         <ImageButton
+            android:id="@+id/btn_wallpaper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ImageButton.Wallpaper"
+            />
+
+        <ImageButton
             android:id="@+id/btn_app_drawer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_large"
             style="@style/ImageButton.Apps"
             />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

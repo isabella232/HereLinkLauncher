@@ -5,33 +5,15 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
 import com.fognl.herelink.launcher.util.AppPrefs
-import java.io.*
+import com.fognl.herelink.launcher.util.Streams
+import java.io.File
+import java.io.FileOutputStream
 
 class BackgroundStorage {
     companion object {
         private val TAG = BackgroundStorage::class.java.simpleName
 
         private fun getImagesDir(context: Context): File = File(context.getExternalFilesDir(null), "backgrounds")
-
-        private fun copyAndClose(input: InputStream, output: OutputStream) {
-            try {
-                try {
-                    val buf = ByteArray(4096)
-                    var read = input.read(buf)
-                    while(read != -1) {
-                        output.write(buf)
-                        read = input.read(buf)
-                    }
-                } finally {
-                    input.close()
-                    output.flush()
-                    output.close()
-                }
-
-            } catch(ex: IOException) {
-                Log.e(TAG, ex.message, ex)
-            }
-        }
 
         /** Dump images from assets into an external directory if they don't exist at the destination. */
         fun dumpImages(context: Context) {
@@ -50,7 +32,7 @@ class BackgroundStorage {
                         try {
                             val input = assMan.open("backgrounds/${img}")
                             val output = FileOutputStream(file)
-                            copyAndClose(input, output)
+                            Streams.copyAndClose(input, output)
                         } catch(ex: Throwable) {
                             Log.e(TAG, ex.message, ex)
                         }

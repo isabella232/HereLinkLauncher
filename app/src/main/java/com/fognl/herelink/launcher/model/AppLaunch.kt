@@ -7,11 +7,13 @@ import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 import android.util.Log
 import com.fognl.herelink.launcher.LauncherApp
+import com.fognl.herelink.launcher.util.Streams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
 import java.io.FileReader
 import java.io.FileWriter
 
@@ -53,6 +55,18 @@ class AppLaunchStorage private constructor(val context: Context) {
     }
 
     private val packageNames = mutableSetOf<CharSequence>()
+
+    fun checkDefaults(context: Context) {
+        val file = getFavoritesFile(context)
+        if(!file.exists()) {
+            val assMan = context.assets
+            try {
+                Streams.copyAndClose(assMan.open("default_favorites"), FileOutputStream(file))
+            } catch(ex: Throwable) {
+                Log.e(TAG, ex.message, ex)
+            }
+        }
+    }
 
     fun addToFavorites(item: AppLaunch, callback: (success: Boolean) -> Unit) {
         item.packageName?.let { name ->
@@ -114,18 +128,19 @@ class AppLaunchStorage private constructor(val context: Context) {
 
     private fun loadPackages() {
         val file = getFavoritesFile(LauncherApp.get())
-
-        try {
-            val reader = FileReader(file)
+        if(file.exists()) {
             try {
-                val lines = reader.readLines()
-                packageNames.addAll(lines)
-                Log.v(TAG, "packages=${packageNames}")
-            } finally {
-                reader.close()
+                val reader = FileReader(file)
+                try {
+                    val lines = reader.readLines()
+                    packageNames.addAll(lines)
+                    Log.v(TAG, "packages=${packageNames}")
+                } finally {
+                    reader.close()
+                }
+            } catch(ex: Throwable) {
+                Log.e(TAG, ex.message, ex)
             }
-        } catch(ex: Throwable) {
-            Log.e(TAG, ex.message, ex)
         }
     }
 

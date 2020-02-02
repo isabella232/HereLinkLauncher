@@ -23,5 +23,7 @@ class LauncherApp: Application() {
         AppPrefs.init(this)
         AppLaunchStorage.init(this)
         BackgroundStorage.dumpImages(this)
+
+        AppLaunchStorage.instance.checkDefaults(this)
     }
 }

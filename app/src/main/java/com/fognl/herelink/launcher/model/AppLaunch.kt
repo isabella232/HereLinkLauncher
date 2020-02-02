@@ -24,7 +24,7 @@ class AppLaunch {
             val manager = LauncherApp.get().packageManager
             input.packageName?.let { name ->
                 val intent = manager.getLaunchIntentForPackage(name.toString())
-                intent?.let { target ->
+                intent?.let { _ ->
                     callback(intent)
                 }
             }
@@ -45,6 +45,10 @@ class AppLaunchStorage private constructor(val context: Context) {
         fun init(context: Context) {
             _instance = AppLaunchStorage(context)
             _instance.loadPackages()
+        }
+
+        private fun getFavoritesFile(context: Context): File {
+            return File(context.getExternalFilesDir(null), "favorites")
         }
     }
 
@@ -94,7 +98,7 @@ class AppLaunchStorage private constructor(val context: Context) {
                 .addCategory(Intent.CATEGORY_LAUNCHER)
 
             with(LauncherApp.get().packageManager) {
-                queryIntentActivities(launch, 0)?.forEach { ri ->
+                queryIntentActivities(launch, 0).forEach { ri ->
                     output.add(toAppLaunch(ri, this))
                 }
             }
@@ -109,8 +113,7 @@ class AppLaunchStorage private constructor(val context: Context) {
     }
 
     private fun loadPackages() {
-        val context = LauncherApp.get()
-        val file = File(context.getExternalFilesDir(null), "favorites")
+        val file = getFavoritesFile(LauncherApp.get())
 
         try {
             val reader = FileReader(file)
@@ -133,8 +136,7 @@ class AppLaunchStorage private constructor(val context: Context) {
             strings += "\n"
         }
 
-        val context = LauncherApp.get()
-        val file = File(context.getExternalFilesDir(null), "favorites")
+        val file = getFavoritesFile(LauncherApp.get())
 
         try {
             val writer = FileWriter(file)
@@ -150,8 +152,6 @@ class AppLaunchStorage private constructor(val context: Context) {
             Log.e(TAG, ex.message, ex)
             return false
         }
-
-        return false
     }
 
     private fun toAppLaunch(info: ResolveInfo, manager: PackageManager): AppLaunch {

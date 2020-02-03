@@ -7,6 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.1"
+
     defaultConfig {
         applicationId "com.fognl.herelink.launcher"
         minSdkVersion 24
@@ -15,9 +16,30 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    signingConfigs {
+        release {
+            storeFile getAppKeystoreFile()
+            storePassword getAppKeystorePassword()
+            keyAlias getAppKey()
+            keyPassword getAppKeyPassword()
+        }
+    }
+
     buildTypes {
+        debug {
+            debuggable true
+            applicationIdSuffix ".debug"
+        }
+
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -35,4 +57,21 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+}
+
+def getAppKeystoreFile() {
+    def filePath = hasProperty('HEX_SERVICES_KEYSTORE') ? HEX_SERVICES_KEYSTORE : null
+    return filePath ? file(filePath) : null
+}
+
+def getAppKeystorePassword() {
+    return hasProperty('HEX_SERVICES_KEYSTORE_PWD') ? HEX_SERVICES_KEYSTORE_PWD : ''
+}
+
+def getAppKeyPassword() {
+    return hasProperty('HEX_SERVICES_KEY_PWD') ? HEX_SERVICES_KEY_PWD : ''
+}
+
+def getAppKey() {
+    return hasProperty('HEX_SERVICES_KEY_ALIAS') ? HEX_SERVICES_KEY_ALIAS : ''
 }

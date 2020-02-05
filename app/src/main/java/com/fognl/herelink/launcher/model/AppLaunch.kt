@@ -46,6 +46,7 @@ class AppLaunchStorage private constructor(val context: Context) {
 
         fun init(context: Context) {
             _instance = AppLaunchStorage(context)
+            _instance.checkDefaults(context)
             _instance.loadPackages()
         }
 

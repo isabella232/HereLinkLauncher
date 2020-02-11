@@ -22,14 +22,14 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    signingConfigs {
-        release {
-            storeFile getAppKeystoreFile()
-            storePassword getAppKeystorePassword()
-            keyAlias getAppKey()
-            keyPassword getAppKeyPassword()
-        }
-    }
+//    signingConfigs {
+//        release {
+//            storeFile getAppKeystoreFile()
+//            storePassword getAppKeystorePassword()
+//            keyAlias getAppKey()
+//            keyPassword getAppKeyPassword()
+//        }
+//    }
 
     buildTypes {
         debug {
@@ -37,11 +37,11 @@ android {
             applicationIdSuffix ".debug"
         }
 
-        release {
-            minifyEnabled false
-            signingConfig signingConfigs.release
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+//        release {
+//            minifyEnabled false
+//            signingConfig signingConfigs.release
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//        }
     }
 }
 

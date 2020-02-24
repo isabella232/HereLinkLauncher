@@ -6,8 +6,10 @@ import android.util.Log
 import android.view.View
 import com.fognl.herelink.launcher.util.AppPrefs
 import com.fognl.herelink.launcher.util.Streams
+import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
+import java.io.InputStreamReader
 
 class BackgroundStorage {
     companion object {
@@ -34,6 +36,7 @@ class BackgroundStorage {
                             val output = FileOutputStream(file)
                             Streams.copyAndClose(input, output)
                         } catch(ex: Throwable) {
+                            Log.v(TAG, "An error occurred copying a file")
                             Log.e(TAG, ex.message, ex)
                         }
                     }
@@ -60,16 +63,55 @@ class BackgroundStorage {
             }
         }
 
+        private fun getDefaultImage(context: Context): String? {
+            context.assets.apply {
+                try {
+                    val reader = BufferedReader(InputStreamReader(this.open("default_background")))
+                    try {
+                        var line = reader.readLine()
+                        while(line != null) {
+                            if(!line.startsWith("#")) {
+                                return line
+                            }
+
+                            line = reader.readLine()
+                        }
+                    } finally {
+                        reader.close()
+                    }
+                } catch(ex: Throwable) {
+                    Log.v(TAG, "An error occurred getting the default image name")
+                    Log.e(TAG, ex.message, ex)
+                    return null
+                }
+            }
+
+            return null
+        }
+
         private fun getBackgroundImage(context: Context): File? {
-            val selectedFile = AppPrefs.instance.backgroundImage
-            if(selectedFile != null) {
-                return selectedFile
-            } else {
+            fun getFirstFoundImage(context: Context): File? {
                 val dir = getImagesDir(context)
                 if(dir.exists()) {
                     dir.listFiles() { f -> f.isFile() }?.let { files ->
                         return if(files.isEmpty()) null else files[0]
                     }
+                }
+
+                return null
+            }
+
+            val selectedFile = AppPrefs.instance.backgroundImage
+            if(selectedFile != null) {
+                return selectedFile
+            } else {
+                getDefaultImage(context)?.let { defaultImage ->
+                    Log.v(TAG, "use default image: ${defaultImage}")
+
+                    val file = File(getImagesDir(context), defaultImage)
+                    return if(file.exists()) file else getFirstFoundImage(context)
+                } ?: run {
+                    return getFirstFoundImage(context)
                 }
             }
 
